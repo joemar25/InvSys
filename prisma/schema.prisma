@@ -29,17 +29,24 @@ model user {
   id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   email        String        @unique @db.Text
   name         String
+  slug         String        @unique
   department   String?
   transactions transaction[]
+
+  // Note: add an index to optimize queries based on slug
+  @@index([slug])
 }
 
 model object_item {
   id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name         String
+  slug         String        @unique
   category     String?
   status       object_status
   location     String?
   transactions transaction[]
+
+  @@index([slug])
 }
 
 model transaction {
@@ -52,4 +59,6 @@ model transaction {
 
   user        user        @relation(fields: [user_id], references: [id])
   object_item object_item @relation(fields: [object_id], references: [id])
+
+  // Note: No need for slug in the transaction model unless required
 }
