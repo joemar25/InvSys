@@ -19,8 +19,8 @@ const geistMono = localFont({
 })
 
 export const metadata: Metadata = {
-  title: 'NAC - Entropy',
-  description: 'Smart Environmental Monitoring System',
+  title: 'Management',
+  description: '',
   viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
 }
 
