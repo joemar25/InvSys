@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// our custom types and db schema
+enum object_status {
+  available
+  borrowed
+}
+
+enum transaction_status {
+  active
+  completed
+}
+
+model user {
+  id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email        String        @unique @db.Text
+  name         String
+  department   String?
+  transactions transaction[]
+}
+
+model object_item {
+  id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name         String
+  category     String?
+  status       object_status
+  location     String?
+  transactions transaction[]
+}
+
+model transaction {
+  id          String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  borrow_date DateTime
+  return_date DateTime?
+  status      transaction_status
+  user_id     String             @db.Uuid
+  object_id   String             @db.Uuid
+
+  user        user        @relation(fields: [user_id], references: [id])
+  object_item object_item @relation(fields: [object_id], references: [id])
+}
