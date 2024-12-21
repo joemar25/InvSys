@@ -5,7 +5,7 @@ export default async function Home() {
   // Get users using the generated Prisma client
   const users: user[] = await prisma.user.findMany()
 
-  // Get objects (renamed to ObjectItem)
+  // Get objects
   const objects: object_item[] = await prisma.object_item.findMany()
 
   // Get transactions

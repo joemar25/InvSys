@@ -6,9 +6,21 @@
   - setup prisma (env setup)
   - run migrations (`npx prisma db push`)
   - see prisma db (`npx prisma studio`)
+- auth setup (todo)
 
 ## Stack
 
 - NextJs
 - Prisma
-- Supabase
+- Supabase'
+
+## Setup (TODO)
+
+- backend
+expressjs - do not use
+
+- server
+nodejs (mango db) - do not use
+
+- frontend
+nextjs - use supabase
