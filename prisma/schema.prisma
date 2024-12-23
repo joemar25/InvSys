@@ -1,64 +1,136 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// src/prisma/schema.prisma
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url      = env("PG_DATABASE_URL")
+
+  // url       = env("SUPABASE_DATABASE_URL")
+  // directUrl = env("SUPABASE_DIRECT_URL")
+}
+
+// better auth generated models with my modifications
+model User {
+  id            String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email         String        @unique
+  name          String
+  emailVerified Boolean
+  image         String?
+  createdAt     DateTime
+  updatedAt     DateTime
+  sessions      Session[]
+  accounts      Account[]
+  Transaction   Transaction[]
+
+  // name of the table in the database
+  @@map("user")
+}
+
+model Session {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  expiresAt DateTime
+  token     String
+  createdAt DateTime
+  updatedAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String   @db.Uuid
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([token])
+  @@map("session")
+}
+
+model Account {
+  id                    String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  accountId             String
+  providerId            String
+  userId                String    @db.Uuid
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  password              String?
+  createdAt             DateTime
+  updatedAt             DateTime
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime?
+  updatedAt  DateTime?
+
+  @@map("verification")
 }
 
 // our custom types and db schema
-enum object_status {
+enum ObjectStatus {
   available
   borrowed
+
+  @@map("object_status")
 }
 
-enum transaction_status {
+enum TransactionStatus {
   active
   completed
+
+  @@map("transaction_status")
 }
 
-model user {
-  id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email        String        @unique @db.Text
-  name         String
-  slug         String        @unique
-  department   String?
-  transactions transaction[]
-
-  // Note: add an index to optimize queries based on slug
-  @@index([slug])
-}
-
-model object_item {
+model ObjectItem {
   id           String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name         String
   slug         String        @unique
   category     String?
-  status       object_status
+  status       ObjectStatus
   location     String?
-  transactions transaction[]
+  transactions Transaction[]
 
   @@index([slug])
+  @@map("object_item")
 }
 
-model transaction {
-  id          String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+model Transaction {
+  id          String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   borrow_date DateTime
   return_date DateTime?
-  status      transaction_status
-  user_id     String             @db.Uuid
-  object_id   String             @db.Uuid
+  status      TransactionStatus
+  user_id     String            @db.Uuid
+  object_id   String            @db.Uuid
 
-  user        user        @relation(fields: [user_id], references: [id])
-  object_item object_item @relation(fields: [object_id], references: [id])
+  User       User       @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  ObjectItem ObjectItem @relation(fields: [object_id], references: [id], onDelete: Cascade)
 
-  // Note: No need for slug in the transaction model unless required
+  @@map("transaction")
 }
+
+// For TYPE Safety
+
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+// commands:
+// prisma init # initialize the prisma project (this is the file)
+// npx prisma generate
+// npx @better-auth/cli generate # for generating the prisma + basic auth - will generate extra models for migration `pnpm add @better-auth/cli` or `npm add -g @better-auth/cli`
+// npx prisma db push # push the schema to the database in the selected provider
+// npx prisma migrate dev --name init # create a new migration
+// npx prisma migrate reset # reset the database (good for not working migrate push)
+// npx prisma db seed # seed the database
+// npx @better-auth/cli migrate # migrate the database
+// npx prisma studio # to view the database in the browser

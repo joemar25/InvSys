@@ -1,0 +1,1 @@
+// run: openssl rand -base64 32 or refer to adding secret for better-auth in here: https://www.better-auth.com/docs/installation
