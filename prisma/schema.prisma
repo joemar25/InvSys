@@ -1,5 +1,4 @@
 // src/prisma/schema.prisma
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,6 +12,7 @@ datasource db {
 }
 
 // better auth generated models with my modifications
+
 model User {
   id            String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   email         String        @unique
@@ -26,6 +26,10 @@ model User {
   Transaction   Transaction[]
 
   // name of the table in the database
+  username String?
+  role     String? // added
+
+  @@unique([username])
   @@map("user")
 }
 
@@ -75,6 +79,7 @@ model Verification {
 }
 
 // our custom types and db schema
+
 enum ObjectStatus {
   available
   borrowed
@@ -134,3 +139,5 @@ model Transaction {
 // npx prisma db seed # seed the database
 // npx @better-auth/cli migrate # migrate the database
 // npx prisma studio # to view the database in the browser
+
+// documentation for usage of prisma in the next auth https://authjs.dev/getting-started/adapters/prisma
