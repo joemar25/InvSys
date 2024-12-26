@@ -12,7 +12,10 @@ const publicRoutes = ["/auth/sign-in", "/auth/sign-up"]
 
 export default {
     providers: [
-        Github,
+        Github({
+            clientId: process.env.GITHUB_CLIENT_ID,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET,
+        }),
         Credentials({
             credentials: {
                 email: { label: "Email", type: "email", placeholder: "Email" },

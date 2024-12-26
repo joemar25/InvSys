@@ -3,13 +3,15 @@
 
 import { toast } from "sonner"
 import { useState } from "react"
+import { Github } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { signUpSchema, SignUpForm } from "@/lib/zod"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { Separator } from "@/components/ui/separator"
 import { PasswordInput } from "@/components/custom/general/password-input"
-import { handleCredentialsSignin, handleSignUp } from "@/hooks/auth-actions"
+import { handleCredentialsSignin, handleGithubSignin, handleSignUp } from "@/hooks/auth-actions"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 
 const Page = () => {
@@ -54,6 +56,22 @@ const Page = () => {
     <div className="min-h-screen flex items-center justify-center">
       <div className="p-6 rounded-lg shadow-lg w-full max-w-md">
         <h1 className="text-xl font-semibold mb-4">Create an Account</h1>
+        <Button
+          variant="outline"
+          onClick={handleGithubSignin}
+          className="w-full mb-4"
+        >
+          <Github className="mr-2 h-4 w-4" />
+          Continue with Github
+        </Button>
+
+        <div className="relative mb-4">
+          <Separator />
+          <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-background px-2 text-muted-foreground">
+            or
+          </span>
+        </div>
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             {fields.map((field) => (
