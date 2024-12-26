@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { signUpSchema, SignUpForm } from "@/lib/zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { PasswordInput } from "@/components/custom/general/password-input"
-import { handleCredentialsSignin, handleSignUp } from "@/hooks/device/use-auth-actions"
+import { handleCredentialsSignin, handleSignUp } from "@/hooks/auth-actions"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 
 const Page = () => {

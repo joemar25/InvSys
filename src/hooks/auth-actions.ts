@@ -1,4 +1,4 @@
-// src/hooks/device/use-auth-actions.ts
+// src/hooks/auth.ts
 "use server"
 
 import { AuthError } from "next-auth"

@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { signInSchema, SignInForm } from "@/lib/zod"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { handleCredentialsSignin } from "@/hooks/device/use-auth-actions"
+import { handleCredentialsSignin } from "@/hooks/auth-actions"
 import { PasswordInput } from "@/components/custom/general/password-input"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 

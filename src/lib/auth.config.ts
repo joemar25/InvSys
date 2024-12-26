@@ -7,8 +7,8 @@ import { prisma } from "@/lib/prisma"
 import { signInSchema } from "@/lib/zod"
 import { NextAuthConfig } from "next-auth"
 
-const authRoutes = ["/auth/signin", "/auth/signup"]
-const publicRoutes = ["/auth/signin", "/auth/signup"]
+const authRoutes = ["/auth/sign-in", "/auth/sign-up"]
+const publicRoutes = ["/auth/sign-in", "/auth/sign-up"]
 
 export default {
     providers: [
